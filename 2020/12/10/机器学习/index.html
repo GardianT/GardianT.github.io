@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content>
+    <meta name="author" content="THCloud">
+    <meta name="keywords" content>
+    <title>机器学习 ~ Patronum</title>
+    <link rel="stylesheet" href="/css/Material_Icons.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    
+        <link rel="stylesheet" href="/css/post.css">
+        
+            <link rel="stylesheet" href="/css/Prettify/tomorrow-night-eighties.min.css">
+        
+    
+</head>
+
+<body class=" sidebar-collapse">
+<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
+    <div class="container">
+        <div class="navbar-translate">
+            <a class="navbar-brand" href="/">
+                Patronum</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    
+                        
+                            <li class="nav-item">
+                                <a class="nav-link" href="/archives/">
+                                    archives
+                                </a>
+                            </li>
+                        
+                            <li class="nav-item">
+                                <a class="nav-link" href="/about/">
+                                    about
+                                </a>
+                            </li>
+                        
+                    
+                    
+                        
+                            <li class="nav-item">
+                                <a class="nav-link" rel="tooltip" title data-placement="bottom" href="https://github.com/GardianT" target="_blank" data-original-title="See me here">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </li>
+                        
+                            <li class="nav-item">
+                                <a class="nav-link" rel="tooltip" title data-placement="bottom" href="https://www.linkedin.com/in/thcloud/" target="_blank" data-original-title="See me here">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            </div>
+    </div>
+</nav>
+    
+  <div class="page-header header-filter" data-parallax="false" style="background-image: url('/img/post-banner.jpg'); height: 70vh;">
+    
+      <div class="container">
+        <h1 class="title text-center post_title">机器学习</h1>
+        <p class="text-center"><b>Thursday, December 10th 2020, 5:41 pm</b></p>
+      </div>
+    
+  </div>
+
+  
+  
+  
+    <div class="row" style="margin: 0 0 0; z-index: 999;">
+  <div class="col-md-8 offset-md-1">
+    <div class="main main-raised">
+      <div class="container">
+        <div class="section">
+          <div class="post_content">
+              <p><a href="https://zhuanlan.zhihu.com/p/61032148" target="_blank" rel="noopener">LR逻辑回归</a><br>机器学习基础流程：定义模型（函数），定义损失函数，调整特征，样本等使结果趋于正确<br>lr模型函数fx = wx + b, 区间为实数集，最终需要预测概率，sigmod函数用于将fx最终结果区间归到01区间。<br>损失函数用于指导模型如何训练出来w，或者按照什么方法训练出w。其实就是定义了预测结果与真实值的loss是多少。<br>交叉熵是损失函数的一种。 <a href="https://zhuanlan.zhihu.com/p/35709485" target="_blank" rel="noopener">交叉熵损失函数</a>  </p>
+<p><a href="https://blog.csdn.net/u013250416/article/details/81392161" target="_blank" rel="noopener">激活函数，损失函数与优化函数</a><br>梯度下降函数就是损失函数的偏导。即 &amp;loss/w （&amp;是阿尔法，打不出来）<br>w的更新就是用上一次训练值减去下一次的偏导。w = w0 - &amp;loss/w 这个就是典型的优化函数，即求出最后的w。现有优化函数比如adam等是在偏导前面增加了学习率等函数的变化（步长），即这个偏导对w的影响有多大。因为凸函数来说，越靠近正确值，偏导应该越小，固定的偏导可能导致最后反复调整。<br>激活函数：如果没有激活函数，对于多层网络来说，每一层函数如果是线性的话，最终无论多少层，本质相乘起来都是线性函数。因此需要激活函数来变化变成非线性函数。比如sigmoid，ReLU等<br>损失函数：就是告诉模型真实值与训练值的差距是多少的度量      </p>
+<p>一个三层网络的深度学习模型，比如第一层函数f1x，第二层函数f2x，第三层函数f3x，偏导数为f1/x1, f2/x2, f3/x3<br>如果出现梯度消失的情况，会使最终训练的w不再更新，如果出现梯度爆炸，偏导会变得不确定，训练出来的w会跳变，不收敛。  </p>
+<p><a href="https://www.cnblogs.com/sparkwen/p/3441197.html" target="_blank" rel="noopener">LR基础</a>算auc的方法，注意auc只判断相对顺序的正确性，不计算绝对值 </p>
+<p><a href="https://www.zhihu.com/question/295247085/answer/974891555" target="_blank" rel="noopener">softmax和sigmoid</a> 目前工程用softmax做归一化更多，因为softmax在k=2时候可以退化为sigmoid，多分类扩展性更好。常见word2vec等都用softmax归一化  </p>
+<p><a href="https://zhuanlan.zhihu.com/p/34168765" target="_blank" rel="noopener">tensorflow如何注册和调用op的</a><br><a href="https://blog.csdn.net/u013510838/article/details/84103503" target="_blank" rel="noopener">tensorflow源码解析</a> </p>
+<p>协同过滤的向量生成：计算i2i的相似度，比如抽取10万个user，每个user固定位置，买过这个品就是1，没买过这个品就是0。这样每个品就可以产生10w维的向量，也可以计算i2i相似度了<br>word2vec：针对user seq进行分词，每个词都会初始化一个向量出来（模型实现的，不一定是全0，初始化的分布满足正态分布），在网络里进行学习，词之间可以进行更新，比如【w1，w2，w3】，w2经常出现在w1，w3中间，这样w1和w3就会更新w2的向量。其他词同理<br>双塔向量的生成：与word2vec基本同理，初始化向量，但是用的是用户特征，item特征等训练，结合loss函数等进行更新。 </p>
+<p>协同过滤缺点：  </p>
+<ol>
+<li>无行为无法预测：冷启动  </li>
+<li>行为丰富：哈利波特问题。比如iphone可能所有用户都买，在协同过滤场景，跟每个item都产生了关联，这样推荐时候会给每个用户都推荐<br>推荐系统除了推荐准确性以外，还要考虑新颖性，丰富性问题。准确性可以通过准召率来评估，新颖可以通过多路召回等来弥补。user cf比item cf新颖性更好，但是准确性弱。i2i工程难度小，实时性强，是match常用算法。</li>
+</ol>
+<p>模型大体有两类：分类，回归。目前无论是召回还是打分，都是分类模型。只是最后用sigmoid等归一函数所以看起来像回归。<br>区分分类和回归主要看数据的原始样本是什么。如果数据原始样本是0和1这种可枚举结果的分类的样本（比如用户点没点击过这个品），那这就是分类问题；如果样本非常丰富（用户点击这个品的ctr是多少）这是回归问题。<br>在推荐的时候，思路都是往分类发展，即使碰到回归也尽量往回归的路线拆解问题。<br>回归的场景：流量预估，或者预估视频的浏览时长，这种。  </p>
+
+          </div>
+          <br><br>
+          <div>
+              <p>
+                      
+              </p>
+          </div>
+        </div>
+      </div>  
+    </div>
+  </div>
+  <!-- TOC -->
+  
+  <div id="toc">
+    <p class="toc-title"><i class="material-icons" style="vertical-align:middle">toc</i>Toc:</p> 
+    <div id="tocbot"></div>
+  </div>
+
+</div>
+
+
+<br>
+<!-- Comments -->
+<div class="comments" id="comments">
+
+    
+    <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script>               
+        var disqus_shortname = '';
+        var disqus_config = function () {
+            this.page.url = 'http://yoursite.com/2020/12/10/机器学习/'; 
+            this.page.identifier = '/2020/12/10/机器学习/';
+        };
+        (function() { 
+            var d = document, s = d.createElement('script');
+            s.type = 'text/javascript';
+            s.src = '//'+disqus_shortname+'.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>                                
+</div>
+
+</div>
+  
+
+<footer class="footer footer-default">
+        <div class="container">
+          <div class="float-left" style="padding: 15px 0;">
+              <b></b>
+          </div>
+          <div class="copyright float-right">
+            &copy;
+            <script>
+              document.write(new Date().getFullYear())
+            </script>&nbsp;
+            <a href="https://hexo.io/zh-cn/" target="_blank">HEXO</a>&nbsp;<i class="material-icons">favorite_border</i>
+            <a href="https://github.com/invom/Material-T" target="_blank">Material-T</a>
+          </div>
+        </div>
+</footer>
+      <!--   Core JS Files   -->
+      <script src="/js/core/jquery.min.js?v=3.2.1"></script>
+      <script src="/js/main.js"></script>
+      <script src="/js/core/popper.min.js"></script>
+      <script src="/js/core/bootstrap-material-design.min.js"></script>
+      <script src="/js/plugins/moment.min.js"></script>
+      <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+      <script src="/js/material-kit.min.js?v=2.0.5"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+        <script src="/js/post.js"></script>
+        <script src="/js/plugins/prettify.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('pre').addClass('prettyprint linenums');
+                prettyPrint();
+            })
+        </script>
+      
+</body>
+</html>
