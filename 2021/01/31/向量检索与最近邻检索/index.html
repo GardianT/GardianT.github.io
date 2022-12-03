@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content>
+    <meta name="author" content="THCloud">
+    <meta name="keywords" content>
+    <title>向量检索与最近邻检索 ~ Patronum</title>
+    <link rel="stylesheet" href="/css/Material_Icons.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    
+        <link rel="stylesheet" href="/css/post.css">
+        
+            <link rel="stylesheet" href="/css/Prettify/tomorrow-night-eighties.min.css">
+        
+    
+</head>
+
+<body class=" sidebar-collapse">
+<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
+    <div class="container">
+        <div class="navbar-translate">
+            <a class="navbar-brand" href="/">
+                Patronum</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    
+                        
+                            <li class="nav-item">
+                                <a class="nav-link" href="/archives/">
+                                    archives
+                                </a>
+                            </li>
+                        
+                            <li class="nav-item">
+                                <a class="nav-link" href="/about/">
+                                    about
+                                </a>
+                            </li>
+                        
+                    
+                    
+                        
+                            <li class="nav-item">
+                                <a class="nav-link" rel="tooltip" title data-placement="bottom" href="https://github.com/GardianT" target="_blank" data-original-title="See me here">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </li>
+                        
+                            <li class="nav-item">
+                                <a class="nav-link" rel="tooltip" title data-placement="bottom" href="https://www.linkedin.com/in/thcloud/" target="_blank" data-original-title="See me here">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            </div>
+    </div>
+</nav>
+    
+  <div class="page-header header-filter" data-parallax="false" style="background-image: url('/img/post-banner.jpg'); height: 70vh;">
+    
+      <div class="container">
+        <h1 class="title text-center post_title">向量检索与最近邻检索</h1>
+        <p class="text-center"><b>Sunday, January 31st 2021, 4:50 pm</b></p>
+      </div>
+    
+  </div>
+
+  
+  
+  
+    <div class="row" style="margin: 0 0 0; z-index: 999;">
+  <div class="col-md-8 offset-md-1">
+    <div class="main main-raised">
+      <div class="container">
+        <div class="section">
+          <div class="post_content">
+              <p>如何在大规模向量库中快速的找到距离最近topk向量集合？这个问题在学术界上被称为“最近邻检索”（ANN，Approximate Nearest Neighbor）。主流ANN算法有四类  </p>
+<ol>
+<li>基于树结构的方法  </li>
+</ol>
+<p>首先使用树结构（KD-Tree KMeans-tree等）对向量空间进行逐层切分，然后将query向量q从根节点开始走一遍树结构，直到叶子节点。与q同叶子节点的候选向量作为近邻向量被返回。如果单个叶子节点中的候选向量数目不够，则树方法还可以进行回溯，召回更多的临近叶子向量。<br>树方法优势是原理简单，实现容易，缺点是在向量维度较大时候退化为线性搜索，几乎等于暴力。  </p>
+<ol start="2">
+<li>基于hash的方法  </li>
+</ol>
+<p>hash类的方法首先使用hash函数将向量投射到一个向量桶中，理想的hash函数能够将相近的向量投射到同一个向量桶中，近邻搜索时候，在q所在向量桶和邻近桶进行查找，减小搜索范围提高效率。<br>hash方法本质依然是对空间的切分。</p>
+<ol start="3">
+<li>基于图的方法  </li>
+</ol>
+<p>基于图的方法分位两步：第一步是构建近邻图，第二步是在近邻图中进行启发式搜索。<br>构建近邻图时，先将所有候选向量作为顶点，然后将每个顶点的近邻点都使用边连接起来，近邻点的求解可以使用暴力计算，也可以使用改进方法比如kd-tree。启发式搜索时候，从近邻图任意一个点出发，将该点的近邻加入候选集合U，然后在U中与q进行比较，找到最近的一个点，再将这个新点的近邻加入集合U，重复上述步骤。  </p>
+<ol start="4">
+<li>基于量化的方法  </li>
+</ol>
+<p>基于量化（product quantization，PQ）的方法将向量切割为多段子向量，然后分别在每段子向量空间中分别进行K-Means聚类，再将小向量用簇中心点代表，即为量化。同样的将请求向量q进行切割量化，然后用量化后的中心点之间的距离代替原始子向量之间的距离，这样便大大减少了距离计算。<br>PQ有一些改进算法，最常见的就是IVFPQ，将量化过程分为两步，第一步先做粗量化，用少量的中心点代表向量全集，这样肯定会产生比较多的残差。还需对残差向量金鼎分段量化，即“积量化”。<br>IVFPQ的查询过程：（1）找到与请求向量x最邻近的粗量化中心点，计算两者的残差。（2）计算残差与积量化中心点之间的距离，将此距离作为x与候选向量y之间的距离。（3）返回最近邻粗量化簇中，距离在topk的向量。<br>IVFPQ的好处是进一步缩小了搜索集合，加快了查找效率。Facebook开源了内部项目FAISS，正是标准的PQ索引构建库。  </p>
+<p><a href="https://blog.csdn.net/u013066730/article/details/106252573?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_baidulandingword-0&amp;spm=1001.2101.3001.4242" target="_blank" rel="noopener">faiss中的pq和ivf技术</a>  </p>
+<p><a href="https://zhuanlan.zhihu.com/p/80552211" target="_blank" rel="noopener">HNSW算法</a>  </p>
+<p><a href="https://zhuanlan.zhihu.com/p/264832755" target="_blank" rel="noopener">HNSW</a></p>
+<p><a href="https://www.zhihu.com/question/19640394/answer/207795500" target="_blank" rel="noopener">余弦距离和欧氏距离</a><br><a href="https://cloud.tencent.com/developer/article/1487432" target="_blank" rel="noopener">余弦相似度</a>  </p>
+<p>余弦距离取值范围是[0, 2],欧氏距离取值范围是[0, 无穷)，可能是最大区别,但是归一化后基本无区别</p>
+<p><a href="https://zhuanlan.zhihu.com/p/23966698" target="_blank" rel="noopener">kdtree算法</a>  </p>
+<p><a href="https://blog.csdn.net/u010376788/article/details/46957957" target="_blank" rel="noopener">PCA算法</a>  </p>
+
+          </div>
+          <br><br>
+          <div>
+              <p>
+                      
+              </p>
+          </div>
+        </div>
+      </div>  
+    </div>
+  </div>
+  <!-- TOC -->
+  
+  <div id="toc">
+    <p class="toc-title"><i class="material-icons" style="vertical-align:middle">toc</i>Toc:</p> 
+    <div id="tocbot"></div>
+  </div>
+
+</div>
+
+
+<br>
+<!-- Comments -->
+<div class="comments" id="comments">
+
+    
+    <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script>               
+        var disqus_shortname = '';
+        var disqus_config = function () {
+            this.page.url = 'http://yoursite.com/2021/01/31/向量检索与最近邻检索/'; 
+            this.page.identifier = '/2021/01/31/向量检索与最近邻检索/';
+        };
+        (function() { 
+            var d = document, s = d.createElement('script');
+            s.type = 'text/javascript';
+            s.src = '//'+disqus_shortname+'.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>                                
+</div>
+
+</div>
+  
+
+<footer class="footer footer-default">
+        <div class="container">
+          <div class="float-left" style="padding: 15px 0;">
+              <b></b>
+          </div>
+          <div class="copyright float-right">
+            &copy;
+            <script>
+              document.write(new Date().getFullYear())
+            </script>&nbsp;
+            <a href="https://hexo.io/zh-cn/" target="_blank">HEXO</a>&nbsp;<i class="material-icons">favorite_border</i>
+            <a href="https://github.com/invom/Material-T" target="_blank">Material-T</a>
+          </div>
+        </div>
+</footer>
+      <!--   Core JS Files   -->
+      <script src="/js/core/jquery.min.js?v=3.2.1"></script>
+      <script src="/js/main.js"></script>
+      <script src="/js/core/popper.min.js"></script>
+      <script src="/js/core/bootstrap-material-design.min.js"></script>
+      <script src="/js/plugins/moment.min.js"></script>
+      <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+      <script src="/js/material-kit.min.js?v=2.0.5"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+        <script src="/js/post.js"></script>
+        <script src="/js/plugins/prettify.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('pre').addClass('prettyprint linenums');
+                prettyPrint();
+            })
+        </script>
+      
+</body>
+</html>
